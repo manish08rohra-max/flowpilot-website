@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="112" viewBox="0 0 520 112" role="img" aria-labelledby="title desc">
+  <title id="title">FlowPilot</title>
+  <desc id="desc">FlowPilot logo with a flowing blue and teal symbol and white and cyan wordmark.</desc>
+  <defs>
+    <linearGradient id="wingTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0878FF"/>
+      <stop offset="0.56" stop-color="#00B8F0"/>
+      <stop offset="1" stop-color="#00E0C4"/>
+    </linearGradient>
+    <linearGradient id="wingMiddle" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#006BFF"/>
+      <stop offset="0.65" stop-color="#00AFFF"/>
+      <stop offset="1" stop-color="#00D9D0"/>
+    </linearGradient>
+    <linearGradient id="wingLower" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0087FF"/>
+      <stop offset="1" stop-color="#00D9B8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flowing, forward-moving mark -->
+  <g transform="translate(3 7)">
+    <path d="M4 62 C17 28 32 8 57 8 L105 8 C91 25 78 31 58 31 L39 31 C25 31 15 42 4 62 Z" fill="url(#wingTop)"/>
+    <path d="M0 83 C16 56 34 40 57 40 L99 40 C87 55 73 62 54 62 L36 62 C22 62 11 72 0 83 Z" fill="url(#wingMiddle)"/>
+    <path d="M0 84 C15 75 26 69 39 69 L68 69 C55 87 37 99 11 101 L0 102 Z" fill="url(#wingLower)"/>
+    <path d="M78 3 L108 6 L91 24 L94 10 L82 10 Z" fill="#00C9E8"/>
+    <path d="M77 2 L106 5 L89 22 L92 9 L80 8 Z" fill="#0878FF" opacity="0.92"/>
+  </g>
+
+  <!-- Wordmark. System font fallback keeps this SVG portable. -->
+  <text x="132" y="70" font-family="Inter, Arial, Helvetica, sans-serif" font-size="49" font-weight="750" letter-spacing="-2.2" fill="#FFFFFF">Flow<tspan fill="#11D3E0">Pilot</tspan></text>
+</svg>

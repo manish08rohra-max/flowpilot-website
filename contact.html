@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact FlowPilot — Discuss Your Workflow | Workflow Automation &amp; AI Solutions</title>
+  <meta name="description" content="Describe the process you want to automate. FlowPilot helps US businesses and insurance agencies scope practical automation — email info@flowpilotai.co.in or use the enquiry form.">
+  <link rel="canonical" href="https://flowpilotai.co.in/contact.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact FlowPilot — Discuss Your Workflow">
+  <meta property="og:description" content="Describe a process you want to automate — we'll help you assess what automation could realistically change.">
+  <meta property="og:url" content="https://flowpilotai.co.in/contact.html">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand" aria-label="FlowPilot — home">
+        <img src="assets/logo.svg" alt="FlowPilot" class="brand-img" width="520" height="112">
+      </a>
+      <nav class="site-nav" id="siteNav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="services.html">Solutions</a>
+        <a href="insurance.html">Insurance Automation</a>
+        <a href="contact.html" class="btn btn-primary btn-sm" aria-current="page">Contact</a>
+      </nav>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Contact</p>
+        <h1>Describe a process you want to automate</h1>
+        <p class="lead">Bring us one workflow that eats your team's time — email handling, data checks, document entry, download follow-ups — and we'll help you scope what automation could realistically change.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+
+        <div class="form-card" data-reveal>
+          <div id="formSuccess" class="form-success" role="status">
+            <span class="box-msg">Thank you — your enquiry has been sent.</span>
+          </div>
+          <div id="formError" class="form-error" role="alert">
+            <span class="box-msg">Direct web submission isn't active yet.</span>
+          </div>
+
+          <!--
+            FORM DELIVERY (see README → "Contact form configuration"):
+            • Netlify Forms: ready out of the box when hosted on Netlify (data-netlify="true").
+            • Formspree: set FORM_ACTION at the top of js/main.js to your endpoint.
+            • Until one is configured, submissions fall back to opening the
+              visitor's email app pre-filled to info@flowpilotai.co.in.
+          -->
+          <form id="contactForm" name="enquiry" method="POST" action="/" data-netlify="true" netlify-honeypot="company-website" novalidate>
+            <input type="hidden" name="form-name" value="enquiry">
+            <p style="font-family:var(--font-head);font-weight:600;color:var(--ink)">Send an enquiry</p>
+
+            <div class="hp-field" aria-hidden="true">
+              <label>Leave this field empty<input type="text" name="company-website" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="cf-name">Name <em>*</em></label>
+                <input type="text" id="cf-name" name="name" required autocomplete="name" placeholder="Full name">
+                <span class="error-msg">Please enter your name.</span>
+              </div>
+              <div class="field">
+                <label for="cf-business">Company name</label>
+                <input type="text" id="cf-business" name="business" autocomplete="organization" placeholder="Company / agency">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="cf-email">Business email <em>*</em></label>
+              <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@company.com">
+              <span class="error-msg">Please enter a valid email address.</span>
+            </div>
+
+            <div class="field">
+              <label for="cf-topic">Area of interest</label>
+              <select id="cf-topic" name="topic">
+                <option value="general" selected>General automation enquiry</option>
+                <option value="insurance">Insurance agency workflows (downloads, AMS, data)</option>
+                <option value="email">Email &amp; administrative automation</option>
+                <option value="data">Data processing &amp; validation</option>
+                <option value="documents">Document processing with AI</option>
+                <option value="orchestration">Workflow orchestration &amp; integrations</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="cf-message">The workflow or problem <em>*</em></label>
+              <textarea id="cf-message" name="message" required placeholder="What process would you like to improve? Which systems are involved? What problem are you experiencing — and what outcome do you want?"></textarea>
+              <span class="error-msg">Please describe the process (a sentence or two is fine).</span>
+            </div>
+
+            <p class="privacy-note">Your details are used only to respond to your enquiry. We don't share or sell your information, and this site runs no analytics or tracking cookies.</p>
+
+            <button type="submit" class="btn btn-primary">Send enquiry</button>
+          </form>
+        </div>
+
+        <div class="info-card" data-reveal style="--d:.1s">
+          <h3>Reach us directly</h3>
+          <ul class="info-list">
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+              <span><a href="mailto:info@flowpilotai.co.in">info@flowpilotai.co.in</a><button class="copy-btn" type="button" data-copy="info@flowpilotai.co.in">Copy</button></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>
+              <span><a href="tel:+917020111850">+91 70201 11850</a><button class="copy-btn" type="button" data-copy="+917020111850">Copy</button></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.2"/><path d="M12 2a7 7 0 017 7c0 4.4-7 13-7 13S5 13.4 5 9a7 7 0 017-7z"/></svg>
+              <span>Serving US businesses remotely<br>Based in Pune, India</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+              <span>Time zone: India Standard Time (IST) — flexible overlap with US business hours</span>
+            </li>
+          </ul>
+          <p style="font-size:0.86rem;color:var(--faint-dark);margin-top:1.4rem">Not sure where to start? Send whatever you have — a rough description of the process is enough to begin.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head center" data-reveal>
+          <p class="eyebrow on-light">What happens next</p>
+          <h2>From enquiry to engagement</h2>
+        </div>
+        <div class="steps steps-light" style="grid-template-columns:repeat(3,1fr)">
+          <div class="step" data-reveal>
+            <h3>We listen first</h3>
+            <p>A call or email exchange to understand the process, your systems, and constraints — no sales pitch.</p>
+          </div>
+          <div class="step" data-reveal style="--d:.08s">
+            <h3>You get observations</h3>
+            <p>We share what we see: where the friction is, what automation could realistically change, and what we'd suggest.</p>
+          </div>
+          <div class="step" data-reveal style="--d:.16s">
+            <h3>You decide the scope</h3>
+            <p>If we proceed, scope, testing, and support levels are agreed upfront. If not, you keep the observations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <img src="assets/logo.svg" alt="FlowPilot" class="brand-img" width="520" height="112">
+          </a>
+          <p>Workflow automation &amp; AI solutions — helping businesses reduce repetitive work and run smoother operations. Consult. Automate. Transform.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Automation Solutions</a></li>
+            <li><a href="insurance.html">Insurance Automation</a></li>
+            <li><a href="projects.html">Projects &amp; Demonstrations</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Focus areas</h4>
+          <ul class="footer-links">
+            <li><a href="insurance.html#ivans">Carrier download workflows</a></li>
+            <li><a href="insurance.html#ams">Agency management systems</a></li>
+            <li><a href="insurance.html#migration">Data migration &amp; validation</a></li>
+            <li><a href="services.html#email-admin">Email &amp; admin automation</a></li>
+            <li><a href="services.html#document-ai">AI document processing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul class="footer-contact">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg><a href="mailto:info@flowpilotai.co.in">info@flowpilotai.co.in</a></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><a href="tel:+917020111850">+91 70201 11850</a></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Serving US businesses remotely · Based in Pune, India</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> FlowPilot · All rights reserved.</span>
+        <span>No analytics or tracking cookies · Made in Pune, India 🇮🇳</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

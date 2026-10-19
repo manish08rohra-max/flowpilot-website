@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#071a30"/>
+  <defs>
+    <linearGradient id="favWingTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0878FF"/>
+      <stop offset="0.56" stop-color="#00B8F0"/>
+      <stop offset="1" stop-color="#00E0C4"/>
+    </linearGradient>
+    <linearGradient id="favWingMiddle" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#006BFF"/>
+      <stop offset="0.65" stop-color="#00AFFF"/>
+      <stop offset="1" stop-color="#00D9D0"/>
+    </linearGradient>
+    <linearGradient id="favWingLower" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0087FF"/>
+      <stop offset="1" stop-color="#00D9B8"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 6) scale(0.52)">
+    <path d="M4 62 C17 28 32 8 57 8 L105 8 C91 25 78 31 58 31 L39 31 C25 31 15 42 4 62 Z" fill="url(#favWingTop)"/>
+    <path d="M0 83 C16 56 34 40 57 40 L99 40 C87 55 73 62 54 62 L36 62 C22 62 11 72 0 83 Z" fill="url(#favWingMiddle)"/>
+    <path d="M0 84 C15 75 26 69 39 69 L68 69 C55 87 37 99 11 101 L0 102 Z" fill="url(#favWingLower)"/>
+    <path d="M78 3 L108 6 L91 24 L94 10 L82 10 Z" fill="#00C9E8"/>
+    <path d="M77 2 L106 5 L89 22 L92 9 L80 8 Z" fill="#0878FF" opacity="0.92"/>
+  </g>
+</svg>
