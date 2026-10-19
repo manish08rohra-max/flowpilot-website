@@ -4,8 +4,8 @@
   "private": true,
   "description": "FlowPilot marketing website — pure static HTML/CSS/JS. No build step, no runtime dependencies; the repo root is deploy-ready.",
   "scripts": {
-    "build": "echo \"Static site: no build step. All files at the repo root are production-ready.\"",
-    "start": "npx --yes serve ."
+    "build": "node -e \"console.log('Static site - no build step required')\"",
+    "start": "node server.js"
   },
   "keywords": ["static-site", "flowpilot"]
 }
