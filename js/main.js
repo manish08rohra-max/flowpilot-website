@@ -9,6 +9,10 @@
      No keys or credentials are stored in this repository. */
   var FORM_ACTION = "";
   var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/info@flowpilotai.co.in";
+  /* GoDaddy capture endpoint (PHP + MySQL) — relative path, so it only
+     activates when the site is hosted there. On other hosts the fetch
+     fails/returns HTML and delivery falls back to FormSubmit email. */
+  var CAPTURE_ENDPOINT = "api/contact.php";
   var CONTACT_EMAIL = "info@flowpilotai.co.in";
 
   /* ---------- Sticky header ---------- */
@@ -326,6 +330,22 @@
       });
     };
 
+    var tryCapture = function (data) {
+      var payload = {};
+      data.forEach(function (value, key) { payload[key] = value; });
+      payload.phone = phoneValue();
+      delete payload["phone-code"];
+      return fetch(CAPTURE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+          if (!res.ok || json.ok !== true) throw new Error("Capture unavailable");
+        });
+      });
+    };
+
     var postFormSubmit = function (data) {
       var payload = {};
       data.forEach(function (value, key) { payload[key] = value; });
@@ -378,7 +398,15 @@
       var btn = form.querySelector("button[type='submit']");
       btn.disabled = true;
 
-      var delivery = FORM_ACTION ? postFormspree(data) : postFormSubmit(data);
+      var delivery;
+      if (FORM_ACTION) {
+        delivery = postFormspree(data);
+      } else {
+        /* 1) Capture to our own database (GoDaddy PHP endpoint) — includes an
+              email notification. 2) If that endpoint isn't deployed (e.g. Airo),
+              fall back to FormSubmit email. 3) If both fail, mailto handoff. */
+        delivery = tryCapture(data).catch(function () { return postFormSubmit(data); });
+      }
 
       delivery.then(function () {
         openModal();

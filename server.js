@@ -55,6 +55,12 @@ const server = http.createServer(function (req, res) {
     res.end("Forbidden");
     return;
   }
+  // PHP executes on GoDaddy only — never serve the source from this host
+  if (path.extname(resolved).toLowerCase() === ".php") {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Not found");
+    return;
+  }
 
   fs.stat(resolved, function (err, stat) {
     var finalPath = resolved;

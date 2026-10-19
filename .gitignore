@@ -1,6 +1,9 @@
 # Review artifact — not part of the deployed site
 FlowPilot-Website-Review.pdf
 
+# Real database credentials — created on the server, never committed
+api/config.php
+
 # OS / editor junk
 Thumbs.db
 Desktop.ini
