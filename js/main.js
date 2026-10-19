@@ -294,7 +294,26 @@
         setInvalid(field, !valid);
         if (!valid) ok = false;
       });
+      /* Phone is optional — validated only if filled */
+      var phoneField = form.querySelector("#cf-phone");
+      if (phoneField) {
+        var pv = phoneField.value.trim();
+        var phoneOk = pv === "" || /^[+\d][\d\s\-().]{6,19}$/.test(pv);
+        setInvalid(phoneField, !phoneOk);
+        if (!phoneOk) ok = false;
+      }
       return ok;
+    };
+
+    /* Combined phone: country code + number (skips code if user typed their own "+") */
+    var phoneValue = function () {
+      var numInput = form.querySelector("#cf-phone");
+      if (!numInput) return "";
+      var num = numInput.value.trim();
+      if (!num) return "";
+      var code = form.querySelector("#cf-phone-code");
+      var c = code ? code.value : "";
+      return num.charAt(0) === "+" ? num : c + " " + num;
     };
 
     var postFormspree = function (data) {
@@ -310,6 +329,8 @@
     var postFormSubmit = function (data) {
       var payload = {};
       data.forEach(function (value, key) { payload[key] = value; });
+      payload.phone = phoneValue();
+      delete payload["phone-code"];
       payload._subject = "Website enquiry — " + (payload.topic || "General");
       payload._template = "table";
       payload._captcha = "false";
@@ -332,6 +353,7 @@
         "Name: " + data.get("name") +
         "\nBusiness: " + (data.get("business") || "-") +
         "\nEmail: " + data.get("email") +
+        "\nPhone: " + (phoneValue() || "-") +
         "\nArea of interest: " + (data.get("topic") || "-") +
         "\n\nWorkflow / problem:\n" + data.get("message")
       );

@@ -90,6 +90,18 @@
             </div>
 
             <div class="field">
+              <label for="cf-phone">Phone (optional)</label>
+              <div class="phone-row">
+                <select id="cf-phone-code" name="phone-code" aria-label="Country code">
+                  <option value="+1" selected>+1 · US</option>
+                  <option value="+91">+91 · India</option>
+                </select>
+                <input type="tel" id="cf-phone" name="phone" autocomplete="tel" placeholder="555 123 4567">
+              </div>
+              <span class="error-msg">Please enter a valid phone number.</span>
+            </div>
+
+            <div class="field">
               <label for="cf-topic">Area of interest</label>
               <select id="cf-topic" name="topic">
                 <option value="general" selected>General automation enquiry</option>

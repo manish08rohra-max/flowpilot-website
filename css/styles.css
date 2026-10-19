@@ -515,6 +515,11 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
   color: var(--teal);
   margin: 1rem 0 0;
 }
+.phone-row {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 0.6rem;
+}
 @media (max-width: 1024px) { .pick-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 760px) { .pick-grid { grid-template-columns: 1fr; } }
 

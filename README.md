@@ -45,8 +45,9 @@ and confirm it arrives.
   pre-filled to `info@flowpilotai.co.in` and an honest error notice explains it.
 - **Success UI:** a thank-you modal confirms the submission — no page redirect.
 
-Fields collected: name, business email, company (optional), area of interest,
-workflow description. No sensitive data is collected.
+Fields collected: name, business email, company (optional), phone (optional —
+country code selectable: +1 US / +91 India), area of interest, workflow
+description. No sensitive data is collected.
 
 ## Public business information
 
