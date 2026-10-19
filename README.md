@@ -96,7 +96,7 @@ back to mailto unless Formspree is configured.
 
 1. **Form delivery unverified** — deploy to Netlify (or configure Formspree) and submit one
    real test enquiry; confirm it arrives by email.
-2. **Logo** — `assets/logo.svg` is a placeholder mark; replace with the approved logo file.
+2. **Logo** — `assets/logo.svg` now carries the official FlowPilot lockup. ✓ (replace only if branding changes)
 3. **Lighthouse baseline** — run after deployment; static site, no render-blocking JS beyond
    one small file, so scores are expected to be high but must be confirmed.
 4. **Domain/DNS** — point `flowpilotai.co.in` at the host; confirm HTTPS certificates.
@@ -148,7 +148,7 @@ flowpilot-website/
 ├── projects.html       · Projects & Demonstrations (secondary evidence)
 ├── css/styles.css      · All styling (design tokens at top)
 ├── js/main.js          · Nav, reveal, accordion, form delivery (FORM_ACTION here)
-├── assets/logo.svg     · Logo mark (placeholder — replace)
+├── assets/logo.svg     · Official FlowPilot lockup (symbol + wordmark)
 ├── assets/favicon.svg
 ├── _headers            · Netlify security headers
 ├── robots.txt
