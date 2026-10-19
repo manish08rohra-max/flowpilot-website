@@ -50,21 +50,20 @@
       <div class="container contact-grid">
 
         <div class="form-card" data-reveal>
-          <div id="formSuccess" class="form-success" role="status">
-            <span class="box-msg">Thank you — your enquiry has been sent.</span>
-          </div>
           <div id="formError" class="form-error" role="alert">
-            <span class="box-msg">Direct web submission isn't active yet.</span>
+            <span class="box-msg">We couldn't submit your enquiry just now.</span>
           </div>
 
           <!--
             FORM DELIVERY (see README → "Contact form configuration"):
-            • Netlify Forms: ready out of the box when hosted on Netlify (data-netlify="true").
-            • Formspree: set FORM_ACTION at the top of js/main.js to your endpoint.
-            • Until one is configured, submissions fall back to opening the
-              visitor's email app pre-filled to info@flowpilotai.co.in.
+            • FormSubmit AJAX (default): posts directly to info@flowpilotai.co.in.
+              One-time activation: the first submission makes FormSubmit email an
+              activation link to that address — click it once and delivery is live.
+            • Formspree alternative: set FORM_ACTION at the top of js/main.js.
+            • If delivery fails for any reason, the visitor's email app opens
+              pre-filled so the enquiry is never lost.
           -->
-          <form id="contactForm" name="enquiry" method="POST" action="/" data-netlify="true" netlify-honeypot="company-website" novalidate>
+          <form id="contactForm" name="enquiry" method="POST" novalidate>
             <input type="hidden" name="form-name" value="enquiry">
             <p style="font-family:var(--font-head);font-weight:600;color:var(--ink)">Send an enquiry</p>
 
@@ -208,6 +207,16 @@
       </div>
     </div>
   </footer>
+
+  <!-- Thank-you modal -->
+  <div class="modal-overlay" id="submitModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
+      <div class="modal-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2 id="modalTitle">Thank you for your interest!</h2>
+      <p id="modalDesc">Your request was submitted successfully. We'll get back to you shortly at the email you provided.</p>
+      <button class="btn btn-primary" id="modalClose" type="button">Done</button>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>

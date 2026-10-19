@@ -8,43 +8,45 @@ A fast, static, conversion-oriented marketing website for **FlowPilot** — work
 
 | Page | File | Role |
 |---|---|---|
-| Home | `index.html` | Headline, use cases, insurance section, process, About section, FAQ, CTAs |
-| Automation Solutions | `services.html` | Problem-led solutions + capability list |
-| Insurance Automation | `insurance.html` | Dedicated US-agency landing page (IVANS-adjacent download workflows, AMS ops, data migration, reporting, AI-assisted ops) |
-| Contact | `contact.html` | Enquiry form + business contact details |
+| Home | `index.html` | Headline + live workflow pipeline, use cases, insurance section, process, About, FAQ |
+| Automation Solutions | `services.html` | Interactive problem explorer (Today vs. With FlowPilot workflow design) + capability list |
+| Insurance Automation | `insurance.html` | Dedicated US-agency landing page (download workflows, AMS ops, data migration, reporting, AI-assisted ops) + pain-point picker |
+| Contact | `contact.html` | Enquiry form (direct submission) + business contact details |
 | Projects & Demonstrations | `projects.html` | **Secondary evidence page** — footer-linked, not in main nav |
 
-No build step, no framework, no runtime dependencies — plain HTML + CSS + one small JS file.
+No build step, no framework, no runtime dependencies — plain HTML + CSS + one small JS file. `server.js` (Node built-ins only) exists solely for hosts that require a listening process.
 
 ## Local development
 
 ```
 cd C:\Users\Admin\Projects\flowpilot-website
-python -m http.server 8000
+python -m http.server 8000        (option A — simple static server)
+node server.js                    (option B — same server the platform runs, PORT env supported)
 ```
-Open http://localhost:8000 (opening `index.html` directly also works).
+Open http://localhost:8000
 
-## Contact form configuration (REQUIRED before launch)
+## Contact form configuration
 
-The form (`contact.html`, handler in `js/main.js`) supports three delivery modes, tried in order:
+**Direct web submission is active.** The form posts via AJAX to FormSubmit
+(`https://formsubmit.co/ajax/info@flowpilotai.co.in`) — no account, no API key,
+works on any host including GoDaddy and Airo.
 
-1. **Formspree** (optional) — set `FORM_ACTION` at the top of `js/main.js` to your endpoint
-   (e.g. `"https://formspree.io/f/abcdwxyz"`). No keys are stored in the repo.
-2. **Netlify Forms** (default) — works automatically when the site is hosted on Netlify
-   (`data-netlify="true"` is already set; the form is named `enquiry`). Netlify emails
-   submissions to the account owner; configure notification emails in the Netlify dashboard.
-3. **Fallback** — if no provider is available (e.g. local preview), the visitor's email app
-   opens pre-filled to `info@flowpilotai.co.in`, and the UI clearly says so. Enquiries are
-   never silently dropped.
+**One-time activation (required once):** the first submission makes FormSubmit
+email an activation link to `info@flowpilotai.co.in` — click **Activate** in it.
+After that, enquiries arrive directly in the inbox. To activate: submit one test
+enquiry from the live site, click the activation link, then submit another test
+and confirm it arrives.
 
-> ⚠️ **Email delivery is NOT yet verified** — it requires deployment to Netlify (or a
-> Formspree account) and a live test. See "Remaining blockers" below.
+- **Spam protection:** honeypot field + client-side validation; `_captcha` disabled
+  for the AJAX flow (FormSubmit filters server-side too).
+- **Formspree alternative:** set `FORM_ACTION` at the top of `js/main.js` to your
+  Formspree endpoint — it takes priority over FormSubmit.
+- **Failure path:** if delivery fails for any reason, the visitor's email app opens
+  pre-filled to `info@flowpilotai.co.in` and an honest error notice explains it.
+- **Success UI:** a thank-you modal confirms the submission — no page redirect.
 
-Spam protection: honeypot field (`company-website`) + client-side validation. Netlify adds
-its own spam filtering.
-
-Fields collected: name, business email, company (optional), area of interest, workflow
-description. No sensitive data is collected.
+Fields collected: name, business email, company (optional), area of interest,
+workflow description. No sensitive data is collected.
 
 ## Public business information
 
@@ -52,72 +54,25 @@ description. No sensitive data is collected.
 - **Phone:** `+91 70201 11850`
 - **Location:** "Serving US businesses remotely · Based in Pune, India" — no street address
 - **No founder/owner profile** (`.founder-card` CSS retained for later if desired)
-- **Compliance framing:** no partnerships claimed (IVANS/Applied Systems disclaimed by name),
-  no client deployments, testimonials, or metrics; use cases labelled "potential outcomes";
-  internal work labelled Internal R&D / Demo / Prototype on `projects.html`
+- **Compliance framing:** no partnerships claimed (IVANS/Applied Systems disclaimed by
+  name), no client deployments, testimonials, or metrics; use cases labelled "potential
+  outcomes"; internal work labelled Internal R&D / Demo / Prototype on `projects.html`
 
 ## Editing content
 
 - **Copy** — edit HTML directly; sections are labelled with comments.
-- **Logo** — `assets/logo.svg` is the official FlowPilot lockup (symbol + wordmark, white/cyan). The favicon (`assets/favicon.svg`) is the symbol-only mark. Header/footer display the lockup at 40px height via `.brand-img`.
+- **Logo** — `assets/logo.svg` is the official FlowPilot lockup (symbol + wordmark,
+  white/cyan). Favicon (`assets/favicon.svg`) is the symbol-only mark.
 - **Colors** — CSS variables at the top of `css/styles.css`.
 - **Fonts** — Sora + Inter via Google Fonts (each page's `<head>`).
-- **Analytics** — none included by design. If added later, document config + privacy impact
-  and update the footer "No analytics" line.
-
-## Deployment (Netlify recommended)
-
-1. Push to a Git repo or drag-drop the folder at app.netlify.com/drop.
-2. Verify the form appears under **Forms** in the Netlify dashboard; set notification email.
-3. Add a custom domain: `flowpilotai.co.in` (the included `_headers` file applies security
-   headers automatically on Netlify).
-4. Submit `https://flowpilotai.co.in/sitemap.xml` in Google Search Console.
-
-Non-Netlify hosts: `_headers` won't apply (configure headers server-side); the form falls
-back to mailto unless Formspree is configured.
-
-## Tests executed (2026-10-19)
-
-| Check | Result |
-|---|---|
-| Internal link & anchor checker (130 refs, 30 anchor targets, 5 pages) | ✅ all OK |
-| All 5 pages load with zero console/page errors (headless Chromium/Edge) | ✅ pass |
-| Mobile menu open/close at 375px, no horizontal overflow | ✅ pass |
-| CTA destinations present (services.html / contact.html) | ✅ pass |
-| FAQ accordion interaction | ✅ pass |
-| Form validation flags 3 required fields on empty submit | ✅ pass |
-| `?topic=insurance` preselects area of interest | ✅ pass |
-| Fallback delivery path shows guidance box (local, no provider) | ✅ pass |
-| Nav links keyboard-focusable | ✅ pass |
-| Lighthouse scores | ⛔ not executed (no Lighthouse runtime available in this environment) |
-| Live form delivery (Netlify/Formspree) | ⛔ blocked until deployment + external config |
-
-## Remaining blockers to production
-
-1. **Form delivery unverified** — deploy to Netlify (or configure Formspree) and submit one
-   real test enquiry; confirm it arrives by email.
-2. **Logo** — `assets/logo.svg` now carries the official FlowPilot lockup. ✓ (replace only if branding changes)
-3. **Lighthouse baseline** — run after deployment; static site, no render-blocking JS beyond
-   one small file, so scores are expected to be high but must be confirmed.
-4. **Domain/DNS** — point `flowpilotai.co.in` at the host; confirm HTTPS certificates.
-
-## Launch checklist
-
-- [ ] Replace `assets/logo.svg` with final approved logo
-- [ ] Deploy to Netlify; verify `_headers` applied (securityheaders.com)
-- [ ] Submit a live test enquiry; confirm email receipt; then set up form notifications
-- [ ] Add `flowpilotai.co.in` custom domain + verify HTTPS
-- [ ] Run Lighthouse (target: Perf 90+, A11y 95+, BP 95+, SEO 95+)
-- [ ] Submit sitemap to Google Search Console
-- [ ] Final proofread of insurance.html (compliance language intact: no partnership/
-      deployment/metric claims)
-- [ ] Verify footer email/phone still correct after any changes
+- **Analytics** — none included by design. If added later, document config + privacy
+  impact and update the footer "No analytics" line.
 
 ## Deploying from GitHub
 
 This repo is deploy-ready as-is — `index.html` sits at the root, no build step.
 
-1. **Create the repo** on github.com (e.g. `flowpilot-website`), then:
+1. **Create the repo** on github.com, then:
    ```
    git init
    git add .
@@ -130,26 +85,68 @@ This repo is deploy-ready as-is — `index.html` sits at the root, no build step
    auto-detect a **static site** — framework: none, build command: none, output/publish
    directory: **repo root** (`/`). If the platform asks for a build command, use the
    no-op: `npm run build`.
-3. **GoDaddy cPanel instead:** download the repo as a ZIP (Code → Download ZIP), upload
+3. **Platforms that require a listening process** (e.g. Airo): `npm start` runs
+   `server.js` — a zero-dependency Node static server binding `process.env.PORT`.
+4. **GoDaddy cPanel instead:** download the repo as a ZIP (Code → Download ZIP), upload
    to `public_html`, extract so `index.html` sits directly in `public_html`.
 
 > If a preview URL shows the host's "Coming Soon / application is being prepared" page,
 > the files were never deployed — check that the repo is connected and the deploy
 > completed, not the site code.
 
+## Tests executed (2026-10-19)
+
+| Check | Result |
+|---|---|
+| Internal link & anchor checker (129 refs, 31 anchor targets, 5 pages) | ✅ all OK |
+| All 5 pages load with zero console/page errors (headless Chromium/Edge) | ✅ pass |
+| Mobile menu open/close at 375px, no horizontal overflow | ✅ pass |
+| CTA destinations present (services.html / contact.html) | ✅ pass |
+| FAQ accordion interaction | ✅ pass |
+| Form validation flags 3 required fields on empty submit | ✅ pass |
+| `?topic=insurance` preselects area of interest | ✅ pass |
+| Successful submission (mocked endpoint) shows thank-you modal | ✅ pass |
+| Failed submission (mocked 500) shows honest error box with mailto handoff | ✅ pass |
+| Solutions explorer: tabs switch, deep links (#orchestration) activate tabs | ✅ pass |
+| Hero pipeline cycles steps; pauses on hover | ✅ pass |
+| server.js: GET 200s with correct MIME, POST 405, traversal 403 | ✅ pass |
+| Nav links keyboard-focusable | ✅ pass |
+| Lighthouse scores | ⛔ not executed (no Lighthouse runtime available in this environment) |
+| Live form delivery end-to-end | ⏳ one-time FormSubmit activation click pending |
+
+## Remaining blockers to production
+
+1. **FormSubmit activation click** — submit one test enquiry on the live site, click the
+   activation link emailed to `info@flowpilotai.co.in`, then confirm a second test arrives.
+2. **Airo deployment** — repo pushed; redeploy must pick up commit `087d6d7+` (server.js).
+3. **Lighthouse baseline** — run after deployment.
+4. **Domain/DNS** — point `flowpilotai.co.in` at the host; confirm HTTPS.
+
+## Launch checklist
+
+- [x] Official logo lockup in place (`assets/logo.svg`)
+- [ ] FormSubmit activation clicked; live test enquiry confirmed in inbox
+- [ ] Airo deploy successful; preview URL serves the real site
+- [ ] Add `flowpilotai.co.in` custom domain + verify HTTPS
+- [ ] Run Lighthouse (target: Perf 90+, A11y 95+, BP 95+, SEO 95+)
+- [ ] Submit sitemap to Google Search Console
+- [ ] Final proofread of insurance.html (compliance language intact)
+- [ ] Verify footer email/phone still correct after any changes
+
 ## Structure
 
 ```
 flowpilot-website/
 ├── index.html          · Home
-├── services.html       · Automation Solutions (problem-led)
-├── insurance.html      · Insurance Automation landing page
-├── contact.html        · Contact + enquiry form
+├── services.html       · Automation Solutions (interactive problem explorer)
+├── insurance.html      · Insurance Automation landing page (+ pain-point picker)
+├── contact.html        · Contact + enquiry form (direct submission + thank-you modal)
 ├── projects.html       · Projects & Demonstrations (secondary evidence)
+├── server.js           · Zero-dependency static server for PORT-binding hosts
 ├── css/styles.css      · All styling (design tokens at top)
-├── js/main.js          · Nav, reveal, accordion, form delivery (FORM_ACTION here)
+├── js/main.js          · Nav, pipeline, tabs, picker, form delivery (FORM_ACTION here)
 ├── assets/logo.svg     · Official FlowPilot lockup (symbol + wordmark)
-├── assets/favicon.svg
+├── assets/favicon.svg  · Symbol-only mark
 ├── _headers            · Netlify security headers
 ├── robots.txt
 ├── sitemap.xml

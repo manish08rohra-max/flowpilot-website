@@ -1444,6 +1444,56 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
   .svc-tab-list { grid-template-columns: 1fr; }
 }
 
+/* thank-you modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 16, 31, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-card {
+  background: var(--white);
+  border-radius: 22px;
+  max-width: 440px;
+  width: 100%;
+  padding: 2.4rem 2rem 2.2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(14px) scale(0.97);
+  transition: transform 0.25s ease;
+}
+.modal-overlay.show .modal-card { transform: none; }
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.2rem;
+  border-radius: 50%;
+  background: var(--grad);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 14px 30px -12px rgba(34, 160, 220, 0.7);
+}
+.modal-icon svg {
+  width: 30px;
+  height: 30px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.modal-card h2 { font-size: 1.45rem; margin-bottom: 0.5rem; }
+.modal-card p { color: var(--slate); font-size: 0.97rem; margin-bottom: 1.6rem; }
+
 /* ---------- 22. Responsive ---------- */
 @media (max-width: 1024px) {
   .hero-grid { grid-template-columns: 1fr; gap: 2.6rem; }

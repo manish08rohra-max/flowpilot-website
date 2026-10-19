@@ -2,13 +2,13 @@
 (function () {
   "use strict";
 
-  /* ---------- Optional Formspree endpoint ----------
-     Leave "" to use Netlify Forms (requires hosting on Netlify with
-     form processing enabled — see README). If you use Formspree instead,
-     set this to your endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+  /* ---------- Contact form delivery ----------
+     Order: Formspree (if FORM_ACTION set) → FormSubmit AJAX (default,
+     no account needed — first submission triggers a one-time activation
+     email to the business address) → mailto fallback on failure only.
      No keys or credentials are stored in this repository. */
   var FORM_ACTION = "";
-
+  var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/info@flowpilotai.co.in";
   var CONTACT_EMAIL = "info@flowpilotai.co.in";
 
   /* ---------- Sticky header ---------- */
@@ -169,20 +169,20 @@
     } else {
       var idx = 0;
       var timer = null;
-      var start = function () {
+      var startTimer = function () {
         if (timer) return;
         timer = window.setInterval(function () {
           idx = (idx + 1) % steps.length;
           setStep(idx);
         }, 2200);
       };
-      var stop = function () {
+      var stopTimer = function () {
         if (timer) { window.clearInterval(timer); timer = null; }
       };
       setStep(0);
-      start();
-      pipeline.addEventListener("mouseenter", stop);
-      pipeline.addEventListener("mouseleave", start);
+      startTimer();
+      pipeline.addEventListener("mouseenter", stopTimer);
+      pipeline.addEventListener("mouseleave", startTimer);
     }
   }
 
@@ -235,20 +235,47 @@
     } catch (e) { /* storage blocked */ }
   }
 
-  /* ---------- Contact form ----------
-     Delivery order: Formspree (if FORM_ACTION set) → Netlify Forms →
-     mailto fallback. The fallback never silently drops the enquiry:
-     it opens the visitor's email app pre-filled and says so. */
+  /* ---------- Thank-you modal ---------- */
+  var modal = document.getElementById("submitModal");
+  var lastFocus = null;
+
+  var openModal = function () {
+    if (!modal) return;
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    window.requestAnimationFrame(function () { modal.classList.add("show"); });
+    document.body.style.overflow = "hidden";
+    var closeBtn = document.getElementById("modalClose");
+    if (closeBtn) closeBtn.focus();
+  };
+  var closeModal = function () {
+    if (!modal) return;
+    modal.classList.remove("show");
+    document.body.style.overflow = "";
+    window.setTimeout(function () { modal.hidden = true; }, 250);
+    if (lastFocus) lastFocus.focus();
+  };
+  if (modal) {
+    var closeBtn = document.getElementById("modalClose");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal.hidden) closeModal();
+    });
+  }
+
+  /* ---------- Contact form ---------- */
   var form = document.getElementById("contactForm");
   if (form) {
-    var successBox = document.getElementById("formSuccess");
     var errorBox = document.getElementById("formError");
 
-    var showBox = function (el, message) {
-      if (message) el.querySelector(".box-msg").textContent = message;
-      el.classList.add("show");
+    var showError = function (message) {
+      errorBox.querySelector(".box-msg").textContent = message;
+      errorBox.classList.add("show");
     };
-    var hideBox = function (el) { el.classList.remove("show"); };
+    var hideError = function () { errorBox.classList.remove("show"); };
 
     var setInvalid = function (field, invalid) {
       var wrap = field.closest(".field");
@@ -270,19 +297,6 @@
       return ok;
     };
 
-    var postNetlify = function (data) {
-      var body = new URLSearchParams();
-      body.append("form-name", form.getAttribute("name") || "enquiry");
-      data.forEach(function (value, key) { body.append(key, value); });
-      return fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString()
-      }).then(function (res) {
-        if (!res.ok) throw new Error("Submission failed (" + res.status + ")");
-      });
-    };
-
     var postFormspree = function (data) {
       return fetch(FORM_ACTION, {
         method: "POST",
@@ -290,6 +304,25 @@
         body: data
       }).then(function (res) {
         if (!res.ok) throw new Error("Submission failed (" + res.status + ")");
+      });
+    };
+
+    var postFormSubmit = function (data) {
+      var payload = {};
+      data.forEach(function (value, key) { payload[key] = value; });
+      payload._subject = "Website enquiry — " + (payload.topic || "General");
+      payload._template = "table";
+      payload._captcha = "false";
+      return fetch(FORMSUBMIT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+          if (!res.ok || String(json.success).toLowerCase() !== "true") {
+            throw new Error("Submission failed (" + res.status + ")");
+          }
+        });
       });
     };
 
@@ -307,13 +340,12 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      hideBox(successBox);
-      hideBox(errorBox);
+      hideError();
 
-      /* Honeypot: silently accept if a bot filled the hidden field. */
+      /* Honeypot: pretend success if a bot filled the hidden field. */
       var hp = form.querySelector(".hp-field input");
       if (hp && hp.value) {
-        showBox(successBox, "Thank you — your enquiry has been received.");
+        openModal();
         form.reset();
         return;
       }
@@ -324,20 +356,20 @@
       var btn = form.querySelector("button[type='submit']");
       btn.disabled = true;
 
-      var delivery = FORM_ACTION ? postFormspree(data) : postNetlify(data);
+      var delivery = FORM_ACTION ? postFormspree(data) : postFormSubmit(data);
 
       delivery.then(function () {
-        showBox(successBox, "Thank you — your enquiry has been sent. We'll get back to you shortly.");
+        openModal();
         form.reset();
         try { sessionStorage.removeItem("fpPicks"); } catch (err) { /* storage blocked */ }
       }).catch(function () {
-        /* Configured provider unavailable (e.g. local preview or host
-           without form processing). Fall back to the visitor's email
-           app so the enquiry is never silently lost. */
+        /* Real failure — say so honestly and hand off to the email app. */
         mailtoFallback(data);
-        showBox(errorBox,
-          "Direct web submission isn't active yet. Your email app should now open with your message " +
-          "addressed to " + CONTACT_EMAIL + " — just press send. If it didn't open, email us at " + CONTACT_EMAIL + ".");
+        showError(
+          "We couldn't submit your enquiry just now. Your email app should now open with your " +
+          "message addressed to " + CONTACT_EMAIL + " — just press send. If it didn't open, " +
+          "email us directly at " + CONTACT_EMAIL + "."
+        );
       }).finally(function () {
         btn.disabled = false;
       });
