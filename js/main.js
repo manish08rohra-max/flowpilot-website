@@ -3,16 +3,20 @@
   "use strict";
 
   /* ---------- Contact form delivery ----------
-     Order: Formspree (if FORM_ACTION set) → FormSubmit AJAX (default,
-     no account needed — first submission triggers a one-time activation
-     email to the business address) → mailto fallback on failure only.
-     No keys or credentials are stored in this repository. */
+     Order: Node API (api/contact → validated + stored in MySQL, email
+     notification when SMTP is configured) → FormSubmit AJAX (email; the
+     first submission triggers a one-time activation email to the business
+     address) → mailto fallback on failure only.
+     When the Node API answers but rejects the enquiry itself (invalid input
+     or rate limit) the chain stops — the visitor sees the real reason and
+     no fallback email is sent. No keys or credentials are stored in this
+     repository. */
   var FORM_ACTION = "";
   var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/info@flowpilotai.co.in";
-  /* GoDaddy capture endpoint (PHP + MySQL) — relative path, so it only
-     activates when the site is hosted there. On other hosts the fetch
-     fails/returns HTML and delivery falls back to FormSubmit email. */
-  var CAPTURE_ENDPOINT = "api/contact.php";
+  /* GoDaddy capture endpoint (Node.js + MySQL) — relative path, so it only
+     activates when the site is hosted with the Node backend. On other hosts
+     the fetch fails/returns HTML and delivery falls back to FormSubmit. */
+  var CAPTURE_ENDPOINT = "api/contact";
   var CONTACT_EMAIL = "info@flowpilotai.co.in";
 
   /* ---------- Sticky header ---------- */
@@ -330,6 +334,18 @@
       });
     };
 
+    /* Messages shown when the Node API itself rejects the enquiry. These are
+       "final": the endpoint is reachable, so silently falling back to email
+       would bypass the server-side validation and rate limiting. */
+    var CAPTURE_REJECTIONS = {
+      "Invalid submission":
+        "Please check the highlighted fields and try again. If the problem " +
+        "persists, email us at " + CONTACT_EMAIL + ".",
+      "Too many submissions":
+        "You've submitted several enquiries recently. Please email us " +
+        "directly at " + CONTACT_EMAIL + " — we'll get right back to you."
+    };
+
     var tryCapture = function (data) {
       var payload = {};
       data.forEach(function (value, key) { payload[key] = value; });
@@ -341,7 +357,16 @@
         body: JSON.stringify(payload)
       }).then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (json) {
-          if (!res.ok || json.ok !== true) throw new Error("Capture unavailable");
+          if (json && json.ok === true) return;
+          if (json && json.ok === false && json.error && CAPTURE_REJECTIONS[json.error]) {
+            var rejected = new Error(json.error);
+            rejected.final = true;
+            rejected.userMessage = CAPTURE_REJECTIONS[json.error];
+            throw rejected;
+          }
+          /* Not our API (endpoint undeployed, other host, unexpected body) —
+             let the delivery chain fall back to email. */
+          throw new Error("Capture unavailable");
         });
       });
     };
@@ -402,24 +427,35 @@
       if (FORM_ACTION) {
         delivery = postFormspree(data);
       } else {
-        /* 1) Capture to our own database (GoDaddy PHP endpoint) — includes an
-              email notification. 2) If that endpoint isn't deployed (e.g. Airo),
-              fall back to FormSubmit email. 3) If both fail, mailto handoff. */
-        delivery = tryCapture(data).catch(function () { return postFormSubmit(data); });
+        /* 1) Capture to our own database (GoDaddy Node endpoint; includes an
+              email notification when SMTP is configured). 2) If the endpoint
+              isn't deployed (e.g. Airo), fall back to FormSubmit email.
+              3) If both fail, mailto handoff. A deliberate server-side
+              rejection (validation, rate limit) is final and shows the real
+              reason instead of emailing. */
+        delivery = tryCapture(data).catch(function (err) {
+          if (err && err.final) throw err;
+          return postFormSubmit(data);
+        });
       }
 
       delivery.then(function () {
         openModal();
         form.reset();
         try { sessionStorage.removeItem("fpPicks"); } catch (err) { /* storage blocked */ }
-      }).catch(function () {
-        /* Real failure — say so honestly and hand off to the email app. */
-        mailtoFallback(data);
-        showError(
-          "We couldn't submit your enquiry just now. Your email app should now open with your " +
-          "message addressed to " + CONTACT_EMAIL + " — just press send. If it didn't open, " +
-          "email us directly at " + CONTACT_EMAIL + "."
-        );
+      }).catch(function (err) {
+        if (err && err.final) {
+          /* The API rejected this enquiry on purpose — say exactly why. */
+          showError(err.userMessage);
+        } else {
+          /* Real failure — say so honestly and hand off to the email app. */
+          mailtoFallback(data);
+          showError(
+            "We couldn't submit your enquiry just now. Your email app should now open with your " +
+            "message addressed to " + CONTACT_EMAIL + " — just press send. If it didn't open, " +
+            "email us directly at " + CONTACT_EMAIL + "."
+          );
+        }
       }).finally(function () {
         btn.disabled = false;
       });

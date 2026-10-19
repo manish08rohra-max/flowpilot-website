@@ -56,11 +56,14 @@
 
           <!--
             FORM DELIVERY (see README → "Contact form configuration"):
-            • FormSubmit AJAX (default): posts directly to info@flowpilotai.co.in.
-              One-time activation: the first submission makes FormSubmit email an
-              activation link to that address — click it once and delivery is live.
-            • Formspree alternative: set FORM_ACTION at the top of js/main.js.
-            • If delivery fails for any reason, the visitor's email app opens
+            • Node.js API (default on GoDaddy): posts to api/contact — the
+              enquiry is validated, stored in MySQL, and (when SMTP is
+              configured on the server) confirmed by email.
+            • FormSubmit AJAX fallback: posts directly to info@flowpilotai.co.in.
+              One-time activation: the first fallback submission makes FormSubmit
+              email an activation link to that address — click it once and
+              email delivery is live.
+            • If delivery fails entirely, the visitor's email app opens
               pre-filled so the enquiry is never lost.
           -->
           <form id="contactForm" name="enquiry" method="POST" novalidate>

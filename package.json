@@ -1,11 +1,16 @@
 {
   "name": "flowpilot-website",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "FlowPilot marketing website — pure static HTML/CSS/JS. No build step, no runtime dependencies; the repo root is deploy-ready.",
+  "description": "FlowPilot marketing website — static HTML/CSS/JS front-end with a Node.js contact API (GoDaddy hosted MySQL via mysql2, SMTP notifications via nodemailer).",
   "scripts": {
     "build": "node -e \"console.log('Static site - no build step required')\"",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/contact.test.js test/server.e2e.test.js"
   },
-  "keywords": ["static-site", "flowpilot"]
+  "dependencies": {
+    "mysql2": "^3.11.5",
+    "nodemailer": "^6.9.16"
+  },
+  "keywords": ["static-site", "flowpilot", "contact-api"]
 }
